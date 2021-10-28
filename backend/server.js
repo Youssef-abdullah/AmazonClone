@@ -1,10 +1,27 @@
 /* eslint-disable linebreak-style */
 import express from 'express';
+import mongoose from 'mongoose';
 import cors from 'cors';
 import data from './data';
+import config from './config';
+import userRouter from './routers/userRoute';
+
+mongoose
+  .connect(config.MONGODB_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.log('Connected to mongodb.');
+  })
+  .catch((error) => {
+    console.log(error.reason);
+  });
+
 
 const app = express();
 app.use(cors());
+app.use('/api/users', userRouter);
 app.get('/api/products', (req, res) => {
   res.send(data.products);
 });
